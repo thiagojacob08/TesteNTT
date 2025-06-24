@@ -32,9 +32,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult ObterPorId(Guid id)
+        public async Task<IActionResult> ObterPorId(Guid id)
         {
-            Venda venda = _vendaService.ObterVenda(id);
+            Venda venda = await _vendaService.ObterVenda(id);
             if (venda == null) return NotFound();
 
             VendaResponse response = new VendaResponse
@@ -58,9 +58,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Listar()
+        public async Task<IActionResult> Listar()
         {
-            var vendas = _vendaService.ListarVendas();
+            var vendas = await _vendaService.ListarVendas();
 
             var response = vendas.Select(v => new VendaResponse
             {
@@ -83,9 +83,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Controllers
         }
 
         [HttpPut("{id}/cancelar")]
-        public IActionResult Cancelar(Guid id)
+        public async Task<IActionResult> Cancelar(Guid id)
         {
-            Venda venda = _vendaService.ObterVenda(id);
+            Venda venda = await _vendaService.ObterVenda(id);
             if (venda == null) return NotFound();
 
             venda.Cancelar();

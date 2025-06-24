@@ -2,6 +2,7 @@
 
 public class ItemVenda
 {
+    public int Id { get; private set; }
     public string Produto { get; private set; }
     public int Quantidade { get; private set; }
     public decimal PrecoUnitario { get; private set; }

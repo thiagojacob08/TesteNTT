@@ -2,6 +2,7 @@
 using Ambev.DeveloperEvaluation.Domain.Interfaces;
 using DeveloperStore.Domain.Entities;
 using Moq;
+using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,20 +32,20 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             _vendaService.CriarVenda(venda);
 
             // Assert
-            _vendaRepositoryMock.Verify(r => r.Adicionar(venda), Times.Once);
+            _vendaRepositoryMock.Verify(r => r.AdicionarAsync(venda), Times.Once);
         }
 
         [Fact]
-        public void ObterVenda_Deve_Retornar_Venda_Quando_Existe()
+        public async Task ObterVenda_Deve_Retornar_Venda_Quando_Existe()
         {
             // Arrange
             var venda = new Venda("Cliente 2", "Filial B");
             var vendaId = venda.Id;
 
-            _vendaRepositoryMock.Setup(r => r.ObterPorId(vendaId)).Returns(venda);
+            _vendaRepositoryMock.Setup(r => r.ObterPorIdAsync(vendaId)).Returns(Task.FromResult(venda));
 
             // Act
-            var resultado = _vendaService.ObterVenda(vendaId);
+            var resultado = await _vendaService.ObterVenda(vendaId);
 
             // Assert
             Assert.NotNull(resultado);
@@ -52,7 +53,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
         }
 
         [Fact]
-        public void ListarVendas_Deve_Retornar_Todas_As_Vendas()
+        public async Task ListarVendas_Deve_Retornar_Todas_As_VendasAsync()
         {
             // Arrange
             var lista = new List<Venda>
@@ -61,10 +62,10 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
                 new Venda("Cliente 2", "Filial B")
             };
 
-            _vendaRepositoryMock.Setup(r => r.ObterTodas()).Returns(lista);
+            _vendaRepositoryMock.Setup(r => r.ObterTodasAsync()).Returns(Task.FromResult<IEnumerable<Venda>>(lista));
 
             // Act
-            var resultado = _vendaService.ListarVendas();
+            var resultado = await _vendaService.ListarVendas();
 
             // Assert
             Assert.Equal(2, resultado.Count());
@@ -80,7 +81,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             _vendaService.AtualizarVenda(venda);
 
             // Assert
-            _vendaRepositoryMock.Verify(r => r.Atualizar(venda), Times.Once);
+            _vendaRepositoryMock.Verify(r => r.AtualizarAsync(venda), Times.Once);
         }
     }
 }

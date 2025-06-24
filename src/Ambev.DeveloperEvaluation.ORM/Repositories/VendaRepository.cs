@@ -2,6 +2,10 @@
 using Ambev.DeveloperEvaluation.ORM;
 using DeveloperStore.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DeveloperStore.Infrastructure.Repositories
 {
@@ -14,26 +18,26 @@ namespace DeveloperStore.Infrastructure.Repositories
             _context = context;
         }
 
-        public void Adicionar(Venda venda)
+        public async Task AdicionarAsync(Venda venda)
         {
             _context.Vendas.Add(venda);
-            _context.SaveChanges();
+            await EfCoreRetryHelper.ExecuteWithRetryAsync(() => _context.SaveChangesAsync());
         }
 
-        public Venda ObterPorId(Guid id)
+        public async Task<Venda> ObterPorIdAsync(Guid id)
         {
-            return _context.Vendas.Include(v => v.Itens).FirstOrDefault(v => v.Id == id);
+            return await _context.Vendas.Include(v => v.Itens).FirstOrDefaultAsync(v => v.Id == id);
         }
 
-        public IEnumerable<Venda> ObterTodas()
+        public async Task<IEnumerable<Venda>> ObterTodasAsync()
         {
-            return _context.Vendas.Include(v => v.Itens).ToList();
+            return await _context.Vendas.Include(v => v.Itens).ToListAsync();
         }
 
-        public void Atualizar(Venda venda)
+        public async Task AtualizarAsync(Venda venda)
         {
             _context.Vendas.Update(venda);
-            _context.SaveChanges();
+            await EfCoreRetryHelper.ExecuteWithRetryAsync(() => _context.SaveChangesAsync());
         }
     }
 }

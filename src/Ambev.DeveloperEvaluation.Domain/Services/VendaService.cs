@@ -18,25 +18,25 @@ namespace Ambev.DeveloperEvaluation.Application.Services
         public void CriarVenda(Venda venda)
         {
             // Aqui pode implementar regras de negócio antes de adicionar
-            _vendaRepository.Adicionar(venda);
+            _vendaRepository.AdicionarAsync(venda);
 
             // Opcional: registrar evento no log, se quiser
         }
 
-        public Venda ObterVenda(Guid id)
+        public Task<Venda> ObterVenda(Guid id)
         {
-            return _vendaRepository.ObterPorId(id);
+            return _vendaRepository.ObterPorIdAsync(id);
         }
 
-        public IEnumerable<Venda> ListarVendas()
+        public Task<IEnumerable<Venda>> ListarVendas()
         {
-            return _vendaRepository.ObterTodas();
+            return _vendaRepository.ObterTodasAsync();
         }
 
         public void AtualizarVenda(Venda venda)
         {
             // Regras de negócio antes da atualização
-            _vendaRepository.Atualizar(venda);
+            _vendaRepository.AtualizarAsync(venda);
 
             // Opcional: evento no log
         }

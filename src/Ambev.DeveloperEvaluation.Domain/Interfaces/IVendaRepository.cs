@@ -5,8 +5,9 @@ namespace Ambev.DeveloperEvaluation.Domain.Interfaces;
 
 public interface IVendaRepository
 {
-    void Adicionar(Venda venda);
-    Venda ObterPorId(Guid id);
-    IEnumerable<Venda> ObterTodas();
-    void Atualizar(Venda venda);
+    Task AdicionarAsync(Venda venda);
+    Task<Venda> ObterPorIdAsync(Guid id);
+    Task<IEnumerable<Venda>> ObterTodasAsync();
+    Task AtualizarAsync(Venda venda);
+
 }
