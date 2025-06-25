@@ -29,7 +29,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
                 name: "Vendas",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false),
                     DataVenda = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Cliente = table.Column<string>(type: "text", nullable: false),
                     Filial = table.Column<string>(type: "text", nullable: false),
@@ -50,7 +50,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
                     Quantidade = table.Column<int>(type: "integer", nullable: false),
                     PrecoUnitario = table.Column<decimal>(type: "numeric", nullable: false),
                     Desconto = table.Column<decimal>(type: "numeric", nullable: false),
-                    VendaId = table.Column<Guid>(type: "uuid", nullable: true)
+                    VendaId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {

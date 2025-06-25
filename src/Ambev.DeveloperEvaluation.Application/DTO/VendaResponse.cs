@@ -8,7 +8,7 @@ namespace Ambev.DeveloperEvaluation.Application.DTO
 {
     public class VendaResponse
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Cliente { get; set; }
         public string Filial { get; set; }
         public bool Cancelado { get; set; }

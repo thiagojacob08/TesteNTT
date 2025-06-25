@@ -1,6 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Services;
 using Ambev.DeveloperEvaluation.Domain.Interfaces;
 using DeveloperStore.Domain.Entities;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NSubstitute;
 using System;
@@ -13,12 +14,14 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
     public class VendaServiceTests
     {
         private readonly Mock<IVendaRepository> _vendaRepositoryMock;
+        private readonly Mock<ILogger<VendaService>> _LoggerMock;
         private readonly VendaService _vendaService;
 
         public VendaServiceTests()
         {
             _vendaRepositoryMock = new Mock<IVendaRepository>();
-            _vendaService = new VendaService(_vendaRepositoryMock.Object);
+
+            _vendaService = new VendaService(_vendaRepositoryMock.Object, (ILogger<VendaService>)_LoggerMock);
         }
 
         [Fact]
@@ -29,7 +32,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             venda.AdicionarItem("Produto A", 3, 50m);
 
             // Act
-            _vendaService.CriarVenda(venda);
+            _vendaService.CriarVendaAsync(venda);
 
             // Assert
             _vendaRepositoryMock.Verify(r => r.AdicionarAsync(venda), Times.Once);
@@ -78,7 +81,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             var venda = new Venda("Cliente Atualizado", "Filial Z");
 
             // Act
-            _vendaService.AtualizarVenda(venda);
+            _vendaService.AtualizarVendaAsync(venda);
 
             // Assert
             _vendaRepositoryMock.Verify(r => r.AtualizarAsync(venda), Times.Once);

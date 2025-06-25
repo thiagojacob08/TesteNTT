@@ -20,13 +20,20 @@ namespace DeveloperStore.Infrastructure.Repositories
 
         public async Task AdicionarAsync(Venda venda)
         {
-            _context.Vendas.Add(venda);
-            await EfCoreRetryHelper.ExecuteWithRetryAsync(() => _context.SaveChangesAsync());
+            try
+            {
+                _context.Vendas.Add(venda);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public async Task<Venda> ObterPorIdAsync(Guid id)
+        public async Task<Venda> ObterPorIdAsync(int id)
         {
-            return await _context.Vendas.Include(v => v.Itens).FirstOrDefaultAsync(v => v.Id == id);
+            return await _context.Vendas?.Include(v => v.Itens).FirstOrDefaultAsync(v => v.Id == id);
         }
 
         public async Task<IEnumerable<Venda>> ObterTodasAsync()
@@ -37,7 +44,17 @@ namespace DeveloperStore.Infrastructure.Repositories
         public async Task AtualizarAsync(Venda venda)
         {
             _context.Vendas.Update(venda);
-            await EfCoreRetryHelper.ExecuteWithRetryAsync(() => _context.SaveChangesAsync());
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoverAsync(int id)
+        {
+            var venda = await _context.Vendas.FindAsync(id);
+            if (venda != null)
+            {
+                _context.Vendas.Remove(venda);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

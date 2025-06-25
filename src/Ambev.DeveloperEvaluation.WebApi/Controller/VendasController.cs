@@ -17,22 +17,31 @@ namespace Ambev.DeveloperEvaluation.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Criar([FromBody] CriarVendaRequest request)
+        public async Task<IActionResult> CriarAsync([FromBody] CriarVendaRequest request)
         {
-            Venda venda = new Venda(request.Cliente, request.Filial);
-
-            foreach (ItemVendaRequest item in request.Itens)
+            try
             {
-                venda.AdicionarItem(item.Produto, item.Quantidade, item.PrecoUnitario);
+                Venda venda = new Venda(request.Cliente, request.Filial);
+
+                foreach (ItemVendaRequest item in request.Itens)
+                {
+                    venda.AdicionarItem(item.Produto, item.Quantidade, item.PrecoUnitario);
+                }
+
+                await _vendaService.CriarVendaAsync(venda);
+
+                return CreatedAtAction(nameof(ObterPorId), new { id = venda.Id }, venda.Id);
+
             }
+            catch (Exception ex)
+            {
 
-            _vendaService.CriarVenda(venda);
-
-            return CreatedAtAction(nameof(ObterPorId), new { id = venda.Id }, venda.Id);
+                throw;
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> ObterPorId(Guid id)
+        public async Task<IActionResult> ObterPorId(int id)
         {
             Venda venda = await _vendaService.ObterVenda(id);
             if (venda == null) return NotFound();
@@ -83,15 +92,23 @@ namespace Ambev.DeveloperEvaluation.WebApi.Controllers
         }
 
         [HttpPut("{id}/cancelar")]
-        public async Task<IActionResult> Cancelar(Guid id)
+        public async Task<IActionResult> Cancelar(int id)
         {
             Venda venda = await _vendaService.ObterVenda(id);
             if (venda == null) return NotFound();
 
             venda.Cancelar();
-            _vendaService.AtualizarVenda(venda);
+            await _vendaService.AtualizarVendaAsync(venda);
 
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoverVenda(int id)
+        {
+            await _vendaService.RemoverVendaAsync(id);
+            return NoContent();
+        }
+
     }
 }

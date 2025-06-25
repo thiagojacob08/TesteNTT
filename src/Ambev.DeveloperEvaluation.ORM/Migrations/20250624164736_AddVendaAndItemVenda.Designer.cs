@@ -94,8 +94,8 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
                     b.Property<int>("Quantidade")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("VendaId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("VendaId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -106,9 +106,9 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
 
             modelBuilder.Entity("DeveloperStore.Domain.Entities.Venda", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
                     b.Property<bool>("Cancelado")
                         .HasColumnType("boolean");
